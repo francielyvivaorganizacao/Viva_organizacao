@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#263d72">
+  <title>VIVA — Meu Sistema de Organização</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><span class="brand-mark">V</span><div><strong>VIVA</strong><small>Meu Sistema de Organização</small></div></div>
+      <div class="nav-label">MENU PRINCIPAL</div>
+      <nav id="navigation" aria-label="Navegação principal"></nav>
+      <div class="sidebar-foot"><span class="demo-dot"></span> Versão inicial · demonstração</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-button menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+        <div class="breadcrumb">Meu espaço <span>/</span> <strong id="breadcrumbCurrent">Início</strong></div>
+        <div class="top-actions"><span class="date-label" id="todayLabel"></span><div class="avatar">FS</div></div>
+      </header>
+
+      <section class="content">
+        <div class="welcome-row">
+          <div><p class="eyebrow" id="pageEyebrow">SEU PAINEL</p><h1 id="pageTitle">Bom dia! Vamos organizar sua vida?</h1><p class="subtitle" id="pageSubtitle">Tudo o que importa, em um só lugar.</p></div>
+          <div class="welcome-decoration">✦</div>
+        </div>
+        <div id="pageContent"></div>
+      </section>
+      <footer>VIVA · Meu Sistema de Organização <span>Protótipo inicial — não utilizar com dados reais</span></footer>
+    </main>
+  </div>
+  <div class="mobile-overlay" id="overlay"></div>
+  <script src="app.js"></script>
+</body>
+</html>
