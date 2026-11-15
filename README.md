@@ -1,23 +1,19 @@
 # VIVA — Meu Sistema de Organização
 
-Protótipo web responsivo com painel inicial e agenda semanal.
+Protótipo web responsivo com agenda semanal e primeira versão do financeiro pessoal.
 
-## Como publicar no GitHub Pages
-1. Extraia o arquivo ZIP.
-2. Envie `index.html`, `styles.css`, `app.js` e `README.md` para a raiz do repositório GitHub.
-3. Confirme a atualização em **Commit changes**.
-4. Aguarde o GitHub Pages atualizar o site.
+## Como publicar
+Envie `index.html`, `styles.css`, `app.js` e `README.md` para a raiz do repositório GitHub e confirme as alterações. O GitHub Pages publica a atualização automaticamente.
 
-## Agenda incluída
-- Cadastro de atividades com data e horário opcional.
-- Categorias: Pessoal, Escritório, Estudos, Casa, Família e Outros.
-- Atividades prioritárias e repetição semanal.
-- Marcação de conclusão, edição e exclusão.
-- Navegação entre semanas.
-- No celular, os sete dias aparecem em uma lista vertical, sem exigir rolagem horizontal.
+## Incluído nesta versão
+- Painel inicial e navegação entre os módulos.
+- Agenda semanal com cadastro, edição, exclusão, conclusão e repetição semanal.
+- Visualização vertical dos sete dias em telas pequenas.
+- Financeiro pessoal com lançamentos de receitas e despesas, datas, categorias, status pago/pendente, resumo mensal e cadastro de contas com saldo inicial.
+- Dados de agenda e financeiro salvos localmente no navegador por meio de localStorage.
 
 ## Limitações importantes
-- As atividades são armazenadas apenas no armazenamento local do navegador e aparelho usados.
-- Não há login, banco de dados remoto, sincronização entre dispositivos ou backup em nuvem.
-- Não utilize dados reais confidenciais, financeiros ou de clientes nesta versão.
-- Os outros módulos ainda são estruturas demonstrativas.
+- Protótipo front-end: não possui servidor, banco de dados remoto, login, sincronização, backup em nuvem ou criptografia de dados armazenados no aparelho.
+- Os dados ficam neste navegador e aparelho. Limpar os dados do navegador pode apagá-los.
+- Não use dados reais, bancários, documentos ou informações confidenciais nesta versão.
+- Transferências, cartões de crédito, parcelamentos, orçamento por categoria e relatórios avançados ainda não foram implementados.
