@@ -1,33 +1,23 @@
 # VIVA — Meu Sistema de Organização
 
-Primeira evolução do protótipo web responsivo.
+Protótipo web responsivo com painel inicial e agenda semanal.
 
 ## Como publicar no GitHub Pages
+1. Extraia o arquivo ZIP.
+2. Envie `index.html`, `styles.css`, `app.js` e `README.md` para a raiz do repositório GitHub.
+3. Confirme a atualização em **Commit changes**.
+4. Aguarde o GitHub Pages atualizar o site.
 
-Envie os arquivos `index.html`, `styles.css`, `app.js` e `README.md` para a raiz do repositório e confirme as alterações. O GitHub Pages publica a versão atualizada automaticamente.
-
-## O que esta versão inclui
-
-- Painel inicial e navegação pelos dez módulos planejados.
-- Agenda semanal de segunda a domingo.
-- Cadastro de atividades com data, horário opcional e categoria.
+## Agenda incluída
+- Cadastro de atividades com data e horário opcional.
 - Categorias: Pessoal, Escritório, Estudos, Casa, Família e Outros.
-- Atividades sem horário, prioridade, repetição semanal, edição, exclusão e conclusão.
-- Salvamento local da agenda no navegador por meio do armazenamento do próprio aparelho.
-- Layout responsivo para celular e computador.
+- Atividades prioritárias e repetição semanal.
+- Marcação de conclusão, edição e exclusão.
+- Navegação entre semanas.
+- No celular, os sete dias aparecem em uma lista vertical, sem exigir rolagem horizontal.
 
 ## Limitações importantes
-
-- Esta ainda é uma aplicação estática, sem servidor, banco de dados ou autenticação.
-- Os dados da agenda ficam somente no navegador e aparelho em que foram cadastrados. Não há sincronização entre dispositivos nem backup em nuvem.
-- Limpar os dados do navegador ou trocar de aparelho pode apagar ou deixar os registros inacessíveis.
-- Não inserir dados reais de clientes, documentos, informações fiscais ou financeiras confidenciais.
-- O repositório é público e o código-fonte pode ser visualizado por outras pessoas.
-
-## Próximas etapas técnicas
-
-1. Escolher e configurar banco de dados e backend.
-2. Implementar autenticação individual e recuperação de acesso.
-3. Migrar os dados da agenda para armazenamento seguro e sincronizado.
-4. Implementar os módulos financeiros, clientes, obrigações, estudos, casa e metas.
-5. Adicionar permissões, histórico, backups e publicação com HTTPS.
+- As atividades são armazenadas apenas no armazenamento local do navegador e aparelho usados.
+- Não há login, banco de dados remoto, sincronização entre dispositivos ou backup em nuvem.
+- Não utilize dados reais confidenciais, financeiros ou de clientes nesta versão.
+- Os outros módulos ainda são estruturas demonstrativas.
