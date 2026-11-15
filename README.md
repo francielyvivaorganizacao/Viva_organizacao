@@ -1,28 +1,33 @@
 # VIVA — Meu Sistema de Organização
 
-Protótipo web responsivo inicial, com navegação entre os módulos e uma lista de tarefas demonstrativa.
+Primeira evolução do protótipo web responsivo.
 
-## Como abrir
-1. Extraia o arquivo ZIP.
-2. Abra `index.html` em um navegador atualizado.
-3. No celular, transfira a pasta para um serviço de hospedagem estática ou abra o endereço hospedado.
+## Como publicar no GitHub Pages
 
-## O que está incluído
-- Interface responsiva para computador e celular.
-- Menu lateral adaptável.
-- Painel inicial.
-- Navegação entre os dez módulos planejados.
-- Lista de tarefas de demonstração com marcação de conclusão e inclusão de itens durante a sessão.
+Envie os arquivos `index.html`, `styles.css`, `app.js` e `README.md` para a raiz do repositório e confirme as alterações. O GitHub Pages publica a versão atualizada automaticamente.
+
+## O que esta versão inclui
+
+- Painel inicial e navegação pelos dez módulos planejados.
+- Agenda semanal de segunda a domingo.
+- Cadastro de atividades com data, horário opcional e categoria.
+- Categorias: Pessoal, Escritório, Estudos, Casa, Família e Outros.
+- Atividades sem horário, prioridade, repetição semanal, edição, exclusão e conclusão.
+- Salvamento local da agenda no navegador por meio do armazenamento do próprio aparelho.
+- Layout responsivo para celular e computador.
 
 ## Limitações importantes
-- Este é somente o front-end inicial; não há servidor, banco de dados, autenticação ou sincronização.
-- A lista de tarefas é mantida apenas na memória da página e será perdida ao recarregar.
-- Não use dados reais, documentos, CPF/CNPJ, dados financeiros ou informações de clientes.
-- Não publique como sistema operacional de escritório antes de implementar autenticação, autorização, banco de dados, backups, criptografia e armazenamento seguro de documentos.
+
+- Esta ainda é uma aplicação estática, sem servidor, banco de dados ou autenticação.
+- Os dados da agenda ficam somente no navegador e aparelho em que foram cadastrados. Não há sincronização entre dispositivos nem backup em nuvem.
+- Limpar os dados do navegador ou trocar de aparelho pode apagar ou deixar os registros inacessíveis.
+- Não inserir dados reais de clientes, documentos, informações fiscais ou financeiras confidenciais.
+- O repositório é público e o código-fonte pode ser visualizado por outras pessoas.
 
 ## Próximas etapas técnicas
-1. Escolher e configurar backend e banco de dados.
+
+1. Escolher e configurar banco de dados e backend.
 2. Implementar autenticação individual e recuperação de acesso.
-3. Modelar dados separados para finanças pessoais e do escritório.
-4. Implementar CRUD completo, histórico, anexos e trilhas de auditoria.
-5. Adicionar testes, backups e publicação HTTPS.
+3. Migrar os dados da agenda para armazenamento seguro e sincronizado.
+4. Implementar os módulos financeiros, clientes, obrigações, estudos, casa e metas.
+5. Adicionar permissões, histórico, backups e publicação com HTTPS.

@@ -12,78 +12,41 @@ const modules = [
 ];
 const $ = s => document.querySelector(s);
 let current = "inicio";
+let weekOffset = 0;
+let editingId = null;
+let agendaItems = loadAgenda();
 let demoTasks = [
   {text:"Organizar as prioridades da semana",category:"Pessoal",done:false},
   {text:"Conferir documentos pendentes dos clientes",category:"Escritório",done:false},
   {text:"Dedicar um tempo aos estudos",category:"Estudos",done:true},
   {text:"Planejar as refeições da semana",category:"Casa",done:false}
 ];
+const categories = ["Pessoal","Escritório","Estudos","Casa","Família","Outros"];
+const categoryClass = {Pessoal:"personal",Escritório:"office",Estudos:"study",Casa:"home",Família:"family",Outros:"other"};
+function loadAgenda(){try{return JSON.parse(localStorage.getItem("viva_agenda_v1")||"[]")}catch(e){return []}}
+function saveAgenda(){try{localStorage.setItem("viva_agenda_v1",JSON.stringify(agendaItems))}catch(e){alert("Não foi possível salvar neste navegador.")}}
 const nav = $("#navigation");
-modules.forEach(m=>{
-  const b=document.createElement("button"); b.className="nav-item"; b.dataset.id=m.id;
-  b.innerHTML=`<span class="nav-icon">${m.icon}</span><span>${m.name}</span>`;
-  b.onclick=()=>showModule(m.id); nav.appendChild(b);
-});
+modules.forEach(m=>{const b=document.createElement("button");b.className="nav-item";b.dataset.id=m.id;b.innerHTML=`<span class="nav-icon">${m.icon}</span><span>${m.name}</span>`;b.onclick=()=>showModule(m.id);nav.appendChild(b)});
 function today(){return new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"numeric",month:"long"}).format(new Date())}
 $("#todayLabel").textContent=today();
-function showModule(id){
-  current=id; const m=modules.find(x=>x.id===id);
-  $("#breadcrumbCurrent").textContent=m.name; $("#pageEyebrow").textContent=id==="inicio"?"SEU PAINEL":"SEU ESPAÇO";
-  $("#pageTitle").textContent=id==="inicio"?"Bom dia! Vamos organizar sua vida?":m.name;
-  $("#pageSubtitle").textContent=id==="inicio"?"Tudo o que importa, em um só lugar.":m.desc+" — estrutura inicial do seu VIVA.";
-  document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.id===id));
-  $("#sidebar").classList.remove("open"); $("#overlay").classList.remove("show");
-  render();
-}
-function taskMarkup(){
- return demoTasks.map((t,i)=>`<label class="task ${t.done?"done":""}"><input type="checkbox" data-task="${i}" ${t.done?"checked":""}><span>${escapeHtml(t.text)}</span><em class="tag ${t.category==="Estudos"?"gold":t.category==="Casa"?"green":t.category==="Escritório"?"":"lilac"}">${t.category}</em></label>`).join("");
-}
-function dashboard(){
- return `<div class="stats">
-  ${stat("Tarefas abertas",demoTasks.filter(t=>!t.done).length,"Hoje","▦","#eaf1ff","#4778c7")}
-  ${stat("Clientes ativos","—","Módulo em preparação","♧","#f0edff","#7969c0")}
-  ${stat("A receber","—","Financeiro do escritório","R$","#eaf6f0","#4b9a79")}
-  ${stat("Metas em andamento","—","Planejamento","◎","#fff0f1","#c87583")}
- </div>
- <div class="layout-two">
-  <section class="panel"><div class="panel-heading"><h2>Minha lista de tarefas</h2><small>DEMONSTRAÇÃO</small></div>
-   <div class="task-list" id="taskList">${taskMarkup()}</div>
-   <form class="form-row" id="taskForm"><input class="field" id="taskInput" placeholder="Adicionar uma tarefa..." required><button class="primary-btn">Adicionar</button></form>
-  </section>
-  <section class="panel"><div class="panel-heading"><h2>Foco da semana</h2><small>EXEMPLO</small></div>
-   <div class="progress-row"><span>Organização pessoal</span><strong>60%</strong></div><div class="progress"><span style="width:60%"></span></div>
-   <div class="progress-row"><span>Rotina profissional</span><strong>45%</strong></div><div class="progress"><span style="width:45%"></span></div>
-   <div class="progress-row"><span>Estudos</span><strong>35%</strong></div><div class="progress"><span style="width:35%"></span></div>
-   <div class="notice" style="margin-top:18px">Os indicadores são ilustrativos. Os módulos serão conectados ao banco de dados na etapa de implementação.</div>
-  </section>
- </div>
- <h2 class="section-title">Acesso rápido aos módulos</h2><div class="quick-grid">${modules.filter(m=>m.id!=="inicio").map(card).join("")}</div>`;
-}
+function showModule(id){current=id;const m=modules.find(x=>x.id===id);$("#breadcrumbCurrent").textContent=m.name;$("#pageEyebrow").textContent=id==="inicio"?"SEU PAINEL":"SEU ESPAÇO";$("#pageTitle").textContent=id==="inicio"?"Bom dia! Vamos organizar sua vida?":m.name;$("#pageSubtitle").textContent=id==="inicio"?"Tudo o que importa, em um só lugar.":m.desc+(id==="agenda"?" — sua semana em ordem.":" — estrutura inicial do seu VIVA.");document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.id===id));$("#sidebar").classList.remove("open");$("#overlay").classList.remove("show");render()}
+function taskMarkup(){return demoTasks.map((t,i)=>`<label class="task ${t.done?"done":""}"><input type="checkbox" data-task="${i}" ${t.done?"checked":""}><span>${escapeHtml(t.text)}</span><em class="tag ${t.category==="Estudos"?"gold":t.category==="Casa"?"green":t.category==="Escritório"?"":"lilac"}">${t.category}</em></label>`).join("")}
+function dashboard(){return `<div class="stats">${stat("Tarefas abertas",demoTasks.filter(t=>!t.done).length,"Hoje","▦","#eaf1ff","#4778c7")}${stat("Clientes ativos","—","Módulo em preparação","♧","#f0edff","#7969c0")}${stat("A receber","—","Financeiro do escritório","R$","#eaf6f0","#4b9a79")}${stat("Metas em andamento","—","Planejamento","◎","#fff0f1","#c87583")}</div><div class="layout-two"><section class="panel"><div class="panel-heading"><h2>Minha lista de tarefas</h2><small>EXEMPLO</small></div><div class="task-list" id="taskList">${taskMarkup()}</div><form class="form-row" id="taskForm"><input class="field" id="taskInput" placeholder="Adicionar uma tarefa..." required><button class="primary-btn">Adicionar</button></form></section><section class="panel"><div class="panel-heading"><h2>Foco da semana</h2><small>EXEMPLO</small></div><div class="progress-row"><span>Organização pessoal</span><strong>60%</strong></div><div class="progress"><span style="width:60%"></span></div><div class="progress-row"><span>Rotina profissional</span><strong>45%</strong></div><div class="progress"><span style="width:45%"></span></div><div class="progress-row"><span>Estudos</span><strong>35%</strong></div><div class="progress"><span style="width:35%"></span></div><div class="notice" style="margin-top:18px">A agenda já permite cadastrar e salvar atividades neste navegador. Os demais módulos serão desenvolvidos por etapas.</div></section></div><h2 class="section-title">Acesso rápido aos módulos</h2><div class="quick-grid">${modules.filter(m=>m.id!=="inicio").map(card).join("")}</div>`}
 function stat(label,value,note,icon,bg,color){return `<div class="stat"><div class="stat-top"><span>${label}</span><span class="stat-icon" style="background:${bg};color:${color}">${icon}</span></div><div class="stat-value">${value}</div><div class="stat-note">${note}</div></div>`}
 function card(m){return `<button class="module-card" data-open="${m.id}"><span class="m-icon" style="background:${m.color};color:${m.tone}">${m.icon}</span><strong>${m.name}</strong><small>${m.desc}</small></button>`}
-function modulePage(m){
- const notice=`<div class="notice">Esta área está na estrutura inicial. Os recursos, cadastros e relatórios serão implementados por etapas. Não insira informações reais ou confidenciais nesta demonstração.</div>`;
- const detail={
- agenda:"Calendário semanal, tarefas com ou sem horário, recorrências e categorias por cor.",
- pessoal:"Receitas, despesas, contas, cartões, orçamento mensal e metas de reserva.",
- escritorio:"Honorários, recebimentos, despesas, fluxo de caixa e resultado mensal.",
- clientes:"Ficha cadastral, regime tributário, serviços contratados, honorários e arquivo digital.",
- fiscal:"Obrigações fiscais, trabalhistas e anuais, prazos, responsáveis e status.",
- estudos:"Concursos, questões, inglês, cursos, livros e acompanhamento de evolução.",
- casa:"Rotina doméstica, compras, refeições, compromissos e organização familiar.",
- metas:"Objetivos pessoais e profissionais, etapas, prazos e progresso.",
- notas:"Anotações rápidas, ideias, registros e listas."
- }[m.id];
- return `${notice}<div class="panel"><div class="module-header"><span class="m-icon" style="background:${m.color};color:${m.tone}">${m.icon}</span><div><h2>${m.name}</h2><p>${m.desc}</p></div></div><p style="font-size:13px;line-height:1.7;color:#65718a">${detail}</p><div class="empty-note">Área preparada para receber as funcionalidades deste módulo.</div></div>`;
-}
-function render(){
- const m=modules.find(x=>x.id===current);
- $("#pageContent").innerHTML=current==="inicio"?dashboard():modulePage(m);
- document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>showModule(b.dataset.open)));
- document.querySelectorAll("[data-task]").forEach(c=>c.addEventListener("change",()=>{demoTasks[Number(c.dataset.task)].done=c.checked;render()}));
- const form=$("#taskForm"); if(form)form.addEventListener("submit",e=>{e.preventDefault();const input=$("#taskInput");if(input.value.trim()){demoTasks.push({text:input.value.trim(),category:"Pessoal",done:false});render()}});
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-$("#menuToggle").onclick=()=>{$("#sidebar").classList.toggle("open");$("#overlay").classList.toggle("show")};
-$("#overlay").onclick=()=>{$("#sidebar").classList.remove("open");$("#overlay").classList.remove("show")};
+function startOfWeek(date){const d=new Date(date);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d}
+function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function weekDates(){const monday=startOfWeek(new Date());monday.setDate(monday.getDate()+weekOffset*7);return Array.from({length:7},(_,i)=>addDays(monday,i))}
+function weekLabel(days){const a=days[0],b=days[6];const fmt=(d)=>new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"short"}).format(d);return `${fmt(a)} – ${fmt(b)} de ${b.getFullYear()}`}
+function itemOccurs(item,date){return item.repeat==="weekly"?new Date(`${item.date}T12:00:00`).getDay()===date.getDay():item.date===dateKey(date)}
+function itemsFor(date){return agendaItems.filter(i=>itemOccurs(i,date)).sort((a,b)=>(a.time||"99:99").localeCompare(b.time||"99:99"))}
+function agendaPage(){const days=weekDates();const count=days.reduce((n,d)=>n+itemsFor(d).filter(i=>!i.done).length,0);return `<div class="agenda-toolbar"><div><div class="agenda-week-title">${weekLabel(days)}</div><div class="agenda-caption">${count} atividade(s) pendente(s) nesta semana</div></div><div class="week-nav"><button class="secondary-btn" id="prevWeek" aria-label="Semana anterior">‹</button><button class="secondary-btn" id="thisWeek">Hoje</button><button class="secondary-btn" id="nextWeek" aria-label="Próxima semana">›</button></div></div><section class="panel agenda-panel"><div class="panel-heading"><h2>Planejamento semanal</h2><button class="primary-btn" id="newAgenda">＋ Nova atividade</button></div><div class="week-grid">${days.map(d=>dayColumn(d)).join("")}</div></section><section class="panel"><div class="panel-heading"><h2>${editingId?"Editar atividade":"Adicionar atividade"}</h2><small>SEU PLANEJAMENTO</small></div><form id="agendaForm" class="agenda-form"><label class="form-field full"><span>O que você precisa fazer?</span><input class="field" id="agendaTitle" maxlength="90" placeholder="Ex.: Preparar almoço, estudar, atender cliente..." required></label><label class="form-field"><span>Data</span><input class="field" id="agendaDate" type="date" required value="${dateKey(new Date())}"></label><label class="form-field"><span>Horário (opcional)</span><input class="field" id="agendaTime" type="time"></label><label class="form-field"><span>Categoria</span><select class="field" id="agendaCategory">${categories.map(c=>`<option>${c}</option>`).join("")}</select></label><label class="form-field"><span>Repetição</span><select class="field" id="agendaRepeat"><option value="none">Não repetir</option><option value="weekly">Toda semana</option></select></label><label class="form-field full check-field"><input type="checkbox" id="agendaPriority"> <span>Marcar como prioridade da semana</span></label><div class="agenda-form-actions full"><button class="primary-btn" type="submit">${editingId?"Salvar alterações":"Adicionar à agenda"}</button>${editingId?'<button class="secondary-btn" type="button" id="cancelEdit">Cancelar edição</button>':""}</div></form></section><p class="storage-note">Seus registros desta agenda ficam salvos neste navegador e neste aparelho. Ainda não há sincronização entre dispositivos nem backup em nuvem. Não use dados confidenciais nesta versão.</p>`}
+function dayColumn(d){const todayKey=dateKey(new Date()),key=dateKey(d),list=itemsFor(d);return `<div class="day-column ${key===todayKey?"is-today":""}"><div class="day-heading"><span>${new Intl.DateTimeFormat("pt-BR",{weekday:"short"}).format(d).replace(".","")}</span><strong>${d.getDate()}</strong></div><div class="day-items">${list.length?list.map(i=>`<article class="agenda-item ${categoryClass[i.category]||"other"} ${i.done?"is-done":""}"><div class="agenda-item-top"><span>${i.time?i.time:"Sem horário"}${i.repeat==="weekly"?" · semanal":""}</span><button class="tiny-action" data-edit="${i.id}" aria-label="Editar">✎</button></div><label class="agenda-item-title"><input type="checkbox" data-agenda-done="${i.id}" ${i.done?"checked":""}><span>${escapeHtml(i.title)}</span></label><div class="agenda-item-bottom"><span>${i.category}</span>${i.priority?'<b>Prioridade</b>':""}</div><button class="delete-link" data-delete="${i.id}">Excluir</button></article>`).join(""):'<div class="day-empty">Livre</div>'}</div></div>`}
+function modulePage(m){if(m.id==="agenda")return agendaPage();const notice=`<div class="notice">Esta área está na estrutura inicial. Os recursos, cadastros e relatórios serão implementados por etapas. Não insira informações reais ou confidenciais nesta demonstração.</div>`;const detail={pessoal:"Receitas, despesas, contas, cartões, orçamento mensal e metas de reserva.",escritorio:"Honorários, recebimentos, despesas, fluxo de caixa e resultado mensal.",clientes:"Ficha cadastral, regime tributário, serviços contratados, honorários e arquivo digital.",fiscal:"Obrigações fiscais, trabalhistas e anuais, prazos, responsáveis e status.",estudos:"Concursos, questões, inglês, cursos, livros e acompanhamento de evolução.",casa:"Rotina doméstica, compras, refeições, compromissos e organização familiar.",metas:"Objetivos pessoais e profissionais, etapas, prazos e progresso.",notas:"Anotações rápidas, ideias, registros e listas."}[m.id];return `${notice}<div class="panel"><div class="module-header"><span class="m-icon" style="background:${m.color};color:${m.tone}">${m.icon}</span><div><h2>${m.name}</h2><p>${m.desc}</p></div></div><p style="font-size:13px;line-height:1.7;color:#65718a">${detail}</p><div class="empty-note">Área preparada para receber as funcionalidades deste módulo.</div></div>`}
+function render(){const m=modules.find(x=>x.id===current);$("#pageContent").innerHTML=current==="inicio"?dashboard():modulePage(m);document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>showModule(b.dataset.open)));document.querySelectorAll("[data-task]").forEach(c=>c.addEventListener("change",()=>{demoTasks[Number(c.dataset.task)].done=c.checked;render()}));const form=$("#taskForm");if(form)form.addEventListener("submit",e=>{e.preventDefault();const input=$("#taskInput");if(input.value.trim()){demoTasks.push({text:input.value.trim(),category:"Pessoal",done:false});render()}});if(current==="agenda")bindAgenda()}
+function bindAgenda(){const prev=$("#prevWeek"),next=$("#nextWeek"),todayBtn=$("#thisWeek");prev.onclick=()=>{weekOffset--;render()};next.onclick=()=>{weekOffset++;render()};todayBtn.onclick=()=>{weekOffset=0;render()};$("#newAgenda").onclick=()=>{$("#agendaTitle").focus();$("#agendaDate").value=dateKey(new Date())};document.querySelectorAll("[data-agenda-done]").forEach(c=>c.onchange=()=>{const item=agendaItems.find(i=>i.id===c.dataset.agendaDone);if(item)item.done=c.checked;saveAgenda();render()});document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editAgenda(b.dataset.edit));document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>{if(confirm("Excluir esta atividade da agenda?")){agendaItems=agendaItems.filter(i=>i.id!==b.dataset.delete);saveAgenda();render()}});const form=$("#agendaForm");form.onsubmit=e=>{e.preventDefault();const data={id:editingId||`${Date.now()}-${Math.random().toString(16).slice(2)}`,title:$("#agendaTitle").value.trim(),date:$("#agendaDate").value,time:$("#agendaTime").value,category:$("#agendaCategory").value,repeat:$("#agendaRepeat").value,priority:$("#agendaPriority").checked,done:false};if(!data.title||!data.date)return;if(editingId){const idx=agendaItems.findIndex(i=>i.id===editingId);if(idx>=0)agendaItems[idx]={...agendaItems[idx],...data,done:agendaItems[idx].done}}else agendaItems.push(data);editingId=null;saveAgenda();render()};const cancel=$("#cancelEdit");if(cancel)cancel.onclick=()=>{editingId=null;render()}}
+function editAgenda(id){const item=agendaItems.find(i=>i.id===id);if(!item)return;editingId=id;render();$("#agendaTitle").value=item.title;$("#agendaDate").value=item.date;$("#agendaTime").value=item.time||"";$("#agendaCategory").value=item.category;$("#agendaRepeat").value=item.repeat;$("#agendaPriority").checked=!!item.priority;$("#agendaTitle").focus()}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+$("#menuToggle").onclick=()=>{$("#sidebar").classList.toggle("open");$("#overlay").classList.toggle("show")};$("#overlay").onclick=()=>{$("#sidebar").classList.remove("open");$("#overlay").classList.remove("show")};
 showModule("inicio");
