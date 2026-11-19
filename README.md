@@ -1,19 +1,17 @@
-# VIVA — Meu Sistema de Organização
+# VIVA — atualização do Financeiro do Escritório
 
-Protótipo web responsivo com agenda semanal e primeira versão do financeiro pessoal.
+Esta atualização acrescenta a primeira versão funcional do módulo **Financeiro do escritório**.
 
-## Como publicar
-Envie `index.html`, `styles.css`, `app.js` e `README.md` para a raiz do repositório GitHub e confirme as alterações. O GitHub Pages publica a atualização automaticamente.
+## Funcionalidades
+- Cadastro manual de receitas e despesas profissionais.
+- Descrição, valor, data, categoria e cliente opcional.
+- Situação recebido/pago ou pendente.
+- Resumo mensal de receitas recebidas, despesas pagas, resultado e total pendente.
+- Filtro por mês e situação; exclusão de lançamentos.
+- Armazenamento separado das finanças pessoais, usando a chave local `viva_office_finance_v1`.
 
-## Incluído nesta versão
-- Painel inicial e navegação entre os módulos.
-- Agenda semanal com cadastro, edição, exclusão, conclusão e repetição semanal.
-- Visualização vertical dos sete dias em telas pequenas.
-- Financeiro pessoal com lançamentos de receitas e despesas, datas, categorias, status pago/pendente, resumo mensal e cadastro de contas com saldo inicial.
-- Dados de agenda e financeiro salvos localmente no navegador por meio de localStorage.
+## Como atualizar
+Substitua no repositório GitHub os arquivos `app.js`, `styles.css` e `README.md` pelos deste pacote e confirme o commit. O `index.html` não precisa ser alterado.
 
 ## Limitações importantes
-- Protótipo front-end: não possui servidor, banco de dados remoto, login, sincronização, backup em nuvem ou criptografia de dados armazenados no aparelho.
-- Os dados ficam neste navegador e aparelho. Limpar os dados do navegador pode apagá-los.
-- Não use dados reais, bancários, documentos ou informações confidenciais nesta versão.
-- Transferências, cartões de crédito, parcelamentos, orçamento por categoria e relatórios avançados ainda não foram implementados.
+É um protótipo front-end. Os dados ficam apenas no armazenamento local do navegador e aparelho; não há login, banco de dados, sincronização ou backup em nuvem. Use somente dados fictícios. O cadastro integrado de clientes, cobranças e relatórios completos ainda não está implementado.
