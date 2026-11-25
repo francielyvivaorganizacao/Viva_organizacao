@@ -204,7 +204,10 @@
 
         <div id="clientList"></div>
       </section>
-    `;
+      
+
+      ${window.VivaContracts.page()}
+    `;  `;
   }
 
   function bind() {
@@ -377,7 +380,11 @@ if (documentNumber) {
       }
     };
 
-    draw();
+        draw();
+
+    if (window.VivaContracts) {
+      window.VivaContracts.bind();
+    }
   }
 
   window.VivaClients = { page, bind };
