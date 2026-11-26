@@ -91,8 +91,41 @@ function officeFinancePage(){
 }
 function bindOfficeFinance(){
   const monthInput=$("#officeMonth");monthInput.onchange=()=>{officeFinanceMonth=monthInput.value||new Date().toISOString().slice(0,7);render()};
-  document.querySelectorAll("[data-office-filter]").forEach(b=>b.onclick=()=>{officeFinanceFilter=b.dataset.officeFilter;render()});
-  document.querySelectorAll("[data-office-delete]").forEach(b=>b.onclick=()=>{if(confirm("Excluir este lançamento profissional?")){officeFinance.transactions=officeFinance.transactions.filter(t=>t.id!==b.dataset.officeDelete);saveOfficeFinance();render()}});
+ 
+document.querySelectorAll("[data-office-delete]").forEach(b => {
+  b.onclick = () => {
+    const transaction = officeFinance.transactions.find(
+      t => t.id === b.dataset.officeDelete
+    );
+
+    if (!transaction) return;
+
+    const linkedToCharge =
+      transaction.chargeId ||
+      transaction.source === "client_charge" ||
+      transaction.source === "client_charge_payment";
+
+    if (linkedToCharge) {
+      alert(
+        "Este lançamento está vinculado a uma cobrança.\n\n" +
+        "Para manter o Financeiro sincronizado, " +
+        "a exclusão deve ser feita pelo módulo de cobranças."
+      );
+      return;
+    }
+
+    if (confirm("Excluir este lançamento profissional?")) {
+      officeFinance.transactions = officeFinance.transactions.filter(
+        t => t.id !== b.dataset.officeDelete
+      );
+
+      saveOfficeFinance();
+      render();
+    }
+  };
+});
+
+
   $("#officeFinanceForm").onsubmit=e=>{e.preventDefault();const amount=parseMoney($("#officeAmount").value);if(!Number.isFinite(amount)||amount<=0){alert("Informe um valor válido maior que zero.");return}const date=$("#officeDate").value;officeFinance.transactions.push({id:`${Date.now()}-${Math.random().toString(16).slice(2)}`,type:$("#officeType").value,description:$("#officeDescription").value.trim(),amount,date,category:$("#officeCategory").value,client:$("#officeClient").value.trim(),status:$("#officeStatus").value});saveOfficeFinance();officeFinanceMonth=date.slice(0,7);render()};
 }
 

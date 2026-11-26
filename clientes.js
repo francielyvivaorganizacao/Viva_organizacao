@@ -205,8 +205,9 @@
         <div id="clientList"></div>
       </section>
     ${window.VivaContracts.page()}
+    ${window.VivaCharges.page()}
     `;
-  }  
+  }
   function bind() {
     let filter = "active";
     let search = "";
@@ -382,6 +383,9 @@ if (documentNumber) {
     if (window.VivaContracts) {
       window.VivaContracts.bind();
     }
+    if (window.VivaCharges) {
+  window.VivaCharges.bind();
+}
   }
 
   window.VivaClients = { page, bind };
