@@ -204,12 +204,9 @@
 
         <div id="clientList"></div>
       </section>
-      
-
-      ${window.VivaContracts.page()}
-    `;  `;
-  }
-
+    ${window.VivaContracts.page()}
+    `;
+  }  
   function bind() {
     let filter = "active";
     let search = "";
