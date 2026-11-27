@@ -34,3 +34,6 @@
 #pageContent .notice{line-height:1.6}
 #pageContent .finance-summary .finance-metric:nth-child(3) strong{color:var(--navy)}
 @media(max-width:520px){#officeFinanceForm .finance-form-actions{grid-column:auto}}
+[hidden] {
+  display: none !important;
+}
